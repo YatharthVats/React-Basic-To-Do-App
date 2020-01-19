@@ -1,0 +1,24 @@
+.Note{
+    text-align: center;
+    margin: 20px;
+    padding: 10px;
+    border: 2px solid #000000;
+}
+
+.NoteEdit{
+    justify-content: right;
+    float: right;
+    display: block;
+    background-color: blue;
+}
+
+.NoteEdit:hover{
+    cursor: pointer;
+}
+
+.NoteDelete{
+    justify-content: right;
+    float: right;
+    display: block;
+    background-color:red ;
+}
