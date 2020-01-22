@@ -5,13 +5,15 @@ import './App.css';
 class App extends Component{
     state={
         notes: [
-         { id:"1",note_content: "Testing"},
+         { id:"1",note_content: "Testing 1"},
          { id:"2",note_content: "Testing 2"}
         ],
         numberOfNotes:2,
+        totalNumberOfNotes:2,
         currentPoints:0,
         inputNewNote:'',
-        cantStore:false
+        cantStore:false,
+        editNote:false
     }
 
     addButtonHandler=()=>{
@@ -24,7 +26,7 @@ class App extends Component{
         else{
         this.setState({cantStore:false});
         var newNote={
-            id:this.state.numberOfNotes+1,
+            id:this.state.totalNumberOfNotes+1,
             note_content:this.state.inputNewNote
         }
         updatedNotes.push(newNote);
@@ -32,26 +34,38 @@ class App extends Component{
             return{
                 notes:updatedNotes,
                 numberOfNotes:prevState.numberOfNotes+1,
+                totalNumberOfNotes:prevState.totalNumberOfNotes+1,
                 inputNewNote:''
             };
         });  
     }
     }
 
-
-    noteEditHandler=(event,id)=>{
+    noteEditHandler=(editedNote,id)=>{        
+        console.log("App.js edit fn");
+        console.log(editedNote);
+        console.log(id);
         const noteIndex=this.state.notes.findIndex(n=>{
             return n.id===id;
           });
         var updatedNotes=[...this.state.notes];
         var note={ ...this.state.notes[noteIndex] };
-        note.note_content=event.target.value;
+        note.note_content=editedNote;
         updatedNotes[noteIndex]=note;
-        this.setState( (prevState,props) =>{
-            return {
-                notes: updatedNotes
+        this.setState( 
+            {notes: updatedNotes});
+    }
+
+    noteDeleteHandler=(noteIndex)=>{
+          const updatedNotes=[...this.state.notes];
+          updatedNotes.splice(noteIndex,1);
+          this.setState((prevState,props)=>{
+            return{
+                notes:updatedNotes,
+                numberOfNotes:prevState.numberOfNotes-1,
+                inputNewNote:''
             };
-    });
+        });  
     };
 
     handleChange=(event)=> {
@@ -75,14 +89,14 @@ class App extends Component{
             <div className="Base">
                 <h1>Note Taking App</h1>
                 <form onSubmit={(e) => {this.addButtonHandler(); e.preventDefault();}}> 
-                <input id="NewNote" placeholder="Add new note..." autofocus="true" value={this.state.inputNewNote} onChange={this.handleChange}></input>
+                <input id="NewNote" placeholder="Add new note..." autoFocus={true} value={this.state.inputNewNote} onChange={this.handleChange}></input>
                 <button id="NewNoteAdd" type="submit">
                     Submit
                 </button>
                 </form>
             <div > Number Of notes: {this.state.numberOfNotes}</div>
             {emptyNote}
-                <Notes notes={this.state.notes}></Notes>
+                <Notes notes={this.state.notes} delete={this.noteDeleteHandler} edit={this.noteEditHandler} editedNote={this.state.editedNote}></Notes>
             </div>
         );
     }
